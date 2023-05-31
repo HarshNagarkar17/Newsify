@@ -11,6 +11,7 @@ const cookie = require('cookie-parser');
 const session = require('express-session');
 const xss = require('xss-clean');
 const compression = require('compression');
+const requestIp = require('request-ip');
 
 // EJS
 server.set('view engine', 'ejs');
@@ -22,11 +23,14 @@ server.use(express.urlencoded({ extended: true}));
 // cookies and sessions
 server.use(cookie());
 server.use(session({
-    secret: process.env.secret,
+    secret: process.env.SECRET,
     resave:false,
     saveUninitialized:true,
     cookie:{secure:false, maxAge: 60*60*1000}
 }));
+
+//requested ipAddress
+server.use(requestIp.mw());
 
 //sanitize request data
 server.use(xss());
